@@ -11,7 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
 public class VPAdapter extends RecyclerView.Adapter<VPAdapter.ViewHolder> {
+
 
     ArrayList<ViewPagerItem> viewPagerItemArrayList;
 
@@ -43,8 +45,8 @@ public class VPAdapter extends RecyclerView.Adapter<VPAdapter.ViewHolder> {
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageView;
-        TextView tcHeading, tvDesc;
+        ImageView imageView; // Image on an ever slide
+        TextView tcHeading, tvDesc; // Title on the bottom and description for it
 
          public ViewHolder(@NonNull View itemView){
              super(itemView);

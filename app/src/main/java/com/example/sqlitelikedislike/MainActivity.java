@@ -17,9 +17,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        // ViewPager initialisation part
         viewPager2 = findViewById(R.id.viewpager);
-        int[] images = {R.drawable.arasaka, R.drawable.arasaka, R.drawable.arasaka, R.drawable.arasaka, R.drawable.arasaka};
+        int[] images = {R.drawable.arasaka, R.drawable.rand, R.drawable.rand2, R.drawable.rand3, R.drawable.arasaka};
         String[] heading = {"Arasaka1", "Arasaka2", "Arasaka3", "Arasaka4", "Arasaka5"};
         String[] desc = {getString(R.string.a_desc), getString(R.string.b_desc), getString(R.string.c_desc), getString(R.string.d_desc), getString(R.string.e_desc)};
 
