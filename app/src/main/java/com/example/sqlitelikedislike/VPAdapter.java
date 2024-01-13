@@ -5,17 +5,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Button;
 
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 
+import android.graphics.Color;
 public class VPAdapter extends RecyclerView.Adapter<VPAdapter.ViewHolder> {
-
-
     ArrayList<ViewPagerItem> viewPagerItemArrayList;
+    ViewPager2 viewPager2;
+    int pos;
+
+    public VPAdapter(){
+
+    }
 
     public VPAdapter(ArrayList<ViewPagerItem> viewPagerItemArrayList){
         this.viewPagerItemArrayList=viewPagerItemArrayList;
@@ -32,11 +39,26 @@ public class VPAdapter extends RecyclerView.Adapter<VPAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position){
+
+
+
+        pos = holder.getAdapterPosition();
+
+        if(position==viewPagerItemArrayList.size()-1){
+            viewPager2.post(runnable);
+        }
+
         ViewPagerItem viewPagerItem = viewPagerItemArrayList.get(position);
 
+        System.out.println("Position is: " + position);
+        System.out.println(viewPagerItem);
+
         holder.imageView.setImageResource(viewPagerItem.imageId);
-        holder.tcHeading.setText(viewPagerItem.heading);
-        holder.tvDesc.setText(viewPagerItem.description);
+        holder.buttonLike.setText("Like " + viewPagerItem.likes+"");
+        holder.buttonDis.setText("Dislike " + viewPagerItem.dislikes+"");
+//        holder.tcHeading.setText(viewPagerItem.heading);
+//        holder.tvDesc.setText(viewPagerItem.description);
+
     }
 
     @Override
@@ -47,15 +69,27 @@ public class VPAdapter extends RecyclerView.Adapter<VPAdapter.ViewHolder> {
 
         ImageView imageView; // Image on an ever slide
         TextView tcHeading, tvDesc; // Title on the bottom and description for it
+        View vbuttonLike, vbuttonDis;
+        Button buttonLike, buttonDis;
 
          public ViewHolder(@NonNull View itemView){
              super(itemView);
 
              imageView = itemView.findViewById(R.id.ivimage);
-             tcHeading = itemView.findViewById(R.id.tvHeading);
-             tvDesc = itemView.findViewById(R.id.tvDesc);
+             buttonLike = (Button)itemView.findViewById(R.id.buttonLike);
+             buttonDis = (Button)itemView.findViewById(R.id.buttonDis);
+//             tcHeading = itemView.findViewById(R.id.tvHeading);
+//             tvDesc = itemView.findViewById(R.id.tvDesc);
          }
     }
+
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            viewPagerItemArrayList.addAll(viewPagerItemArrayList);
+            notifyDataSetChanged();
+        }
+    };
 }
 
 
