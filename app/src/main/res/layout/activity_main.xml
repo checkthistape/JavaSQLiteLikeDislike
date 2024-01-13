@@ -8,90 +8,49 @@
     tools:context=".MainActivity">
 
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Yoyoyo"
+        android:textColor="@color/black"
+        android:textSize="36dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias=".376"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
 
-        android:gravity="center_horizontal"
-        android:layout_gravity="center"
+        />
 
-        android:orientation="vertical"
-        app:layout_editor_absoluteX="0dp"
-        app:layout_editor_absoluteY="0dp"
-        >
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:backgroundTint="@color/redDis"
+        android:layout_marginBottom="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginTop="80dp"
-            android:background="#767676"/>
-
-        <ImageView
-            android:id="@+id/imageView"
-
-
-            android:layout_marginTop="30dp"
-            android:layout_width="300dp"
-            android:layout_height="400dp"
-            app:srcCompat="@drawable/arasaka"
-
-
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="55dp" />
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal"
-
-            android:layout_marginTop="40dp">
-
-            <Button
-                android:layout_width="180dp"
-                android:layout_height="56.25dp"
-                android:layout_gravity="start"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="15dp"
-
-
-                android:text="Like"/>
-
-            <Button
-
-                android:layout_width="180dp"
-                android:layout_height="56.25dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="10dp"
-                android:layout_marginStart="15dp"
-                android:text="Dislike"
-
-                android:backgroundTint="@color/redDis"
-                android:gravity="center"/>
-
-            <Button
-                android:layout_width="180dp"
-                android:layout_height="56.25dp"
-                android:layout_gravity="center"
+        />
 
 
 
 
-                android:text="Like"/>
-
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginTop="30dp"
-            android:background="#767676"/>
-
-    </LinearLayout>
 
 
 
