@@ -3,11 +3,38 @@ package com.example.sqlitelikedislike;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+import androidx.viewpager2.widget.ViewPager2;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import android.view.View;
 
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    ViewPager2 viewPager2;
+    ArrayList<ViewPagerItem> viewPagerItemArrayList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        viewPager2 = findViewById(R.id.viewpager);
+        int[] images = {R.drawable.arasaka, R.drawable.arasaka, R.drawable.arasaka, R.drawable.arasaka, R.drawable.arasaka};
+        String[] heading = {"Arasaka1", "Arasaka2", "Arasaka3", "Arasaka4", "Arasaka5"};
+        String[] desc = {getString(R.string.a_desc), getString(R.string.b_desc), getString(R.string.c_desc), getString(R.string.d_desc), getString(R.string.e_desc)};
+
+        viewPagerItemArrayList = new ArrayList<>();
+
+        for(int i = 0; i<images.length; i++){
+            ViewPagerItem viewPagerItem = new ViewPagerItem(images[i], heading[i], desc[i]);
+            viewPagerItemArrayList.add(viewPagerItem);
+        }
+
+        VPAdapter vpAdapter = new VPAdapter(viewPagerItemArrayList);
+
+        viewPager2.setAdapter(vpAdapter);
+        viewPager2.setClipToPadding(false);
+        viewPager2.setClipChildren(false);
+        viewPager2.setOffscreenPageLimit(2);
     }
 }
