@@ -20,9 +20,7 @@ public class VPAdapter extends RecyclerView.Adapter<VPAdapter.ViewHolder> {
     ViewPager2 viewPager2;
     int pos;
 
-    public VPAdapter(){
-
-    }
+    public VPAdapter(){ }
 
     public VPAdapter(ArrayList<ViewPagerItem> viewPagerItemArrayList){
         this.viewPagerItemArrayList=viewPagerItemArrayList;
@@ -40,10 +38,9 @@ public class VPAdapter extends RecyclerView.Adapter<VPAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position){
 
-
-
         pos = holder.getAdapterPosition();
 
+        // Creates infinity swiping
         if(position==viewPagerItemArrayList.size()-1){
             viewPager2.post(runnable);
         }
@@ -53,11 +50,12 @@ public class VPAdapter extends RecyclerView.Adapter<VPAdapter.ViewHolder> {
         System.out.println("Position is: " + position);
         System.out.println(viewPagerItem);
 
-        holder.imageView.setImageResource(viewPagerItem.imageId);
+        //holder.imageView.setImageResource(viewPagerItem.imageId);
+        //holder.imageView.setImageResource(viewPagerItem.image);
+        holder.imageView.setImageBitmap(viewPagerItem.image);
+
         holder.buttonLike.setText("Like " + viewPagerItem.likes+"");
         holder.buttonDis.setText("Dislike " + viewPagerItem.dislikes+"");
-//        holder.tcHeading.setText(viewPagerItem.heading);
-//        holder.tvDesc.setText(viewPagerItem.description);
 
     }
 
@@ -69,7 +67,7 @@ public class VPAdapter extends RecyclerView.Adapter<VPAdapter.ViewHolder> {
 
         ImageView imageView; // Image on an ever slide
         TextView tcHeading, tvDesc; // Title on the bottom and description for it
-        View vbuttonLike, vbuttonDis;
+
         Button buttonLike, buttonDis;
 
          public ViewHolder(@NonNull View itemView){
@@ -78,11 +76,10 @@ public class VPAdapter extends RecyclerView.Adapter<VPAdapter.ViewHolder> {
              imageView = itemView.findViewById(R.id.ivimage);
              buttonLike = (Button)itemView.findViewById(R.id.buttonLike);
              buttonDis = (Button)itemView.findViewById(R.id.buttonDis);
-//             tcHeading = itemView.findViewById(R.id.tvHeading);
-//             tvDesc = itemView.findViewById(R.id.tvDesc);
          }
     }
 
+    // Method for infinity swiping
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {

@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.database.Cursor;
 import android.database.CursorWindow;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,19 +19,20 @@ import android.view.View;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 
 import android.widget.Button;
 import android.widget.Toast;
+
 public class MainActivity extends AppCompatActivity {
     Button btnShow;
-    DatabaseHelper databaseHelper = new DatabaseHelper(this );
+    DatabaseHelper databaseHelper = new DatabaseHelper(this);
     ArrayList<String> image_id, image_likes, image_dislikes, image_date;
     ArrayList<byte[]> image_blob;
-
-
     ArrayList<ViewPagerItem> viewPagerItemArrayList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Default initialisation part
@@ -40,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
         /*.~~~~~~~~~~~~~.SQLite.~~~~~~~~~~~~~.*/
         // SQLite check
-        databaseHelper.checkDataBase();
+
+        //databaseHelper.checkDataBase();
 
         // Defining arrays, that will contain data from db
         image_id = new ArrayList<>();
@@ -52,39 +56,57 @@ public class MainActivity extends AppCompatActivity {
         gettingDataToArrays();
         /*.~~~~~~~~~~~~~.SQLite.~~~~~~~~~~~~~.*/
 
-        File[] files = new File("/data/user/0/com.example.sqlitelikedislike/files/db/").listFiles();
+        /*.~~~~~~~~~~~~~.File checking.~~~~~~~~~~~~~.*/
+        //File[] files = new File("/data/user/0/com.example.sqlitelikedislike/files/db/").listFiles();
 
-        System.out.println("--------------\n\n");
-        for(File i: files){
-            System.out.println("Element " + i.toString());
-            Toast.makeText(this, "Element " + i, Toast.LENGTH_SHORT );
-        }
-        System.out.println("\n--------------");
-
-
+//        System.out.println("--------------\n\n");
+//        for (File i : files) {
+//            System.out.println("Element " + i.toString());
+//            Toast.makeText(this, "Element " + i, Toast.LENGTH_SHORT).show();
+//        }
+//        System.out.println("\n--------------");
+        /*.~~~~~~~~~~~~~.File checking.~~~~~~~~~~~~~.*/
 
         // ViewPager initialisation part
+
+
 
         int[] images = {R.drawable.arasaka, R.drawable.rand, R.drawable.rand2, R.drawable.rand3, R.drawable.arasaka};
         int[] likes = {25, 32, 33, 55, 3};
         int[] dislikes = {3, 194, 2, 8, 4};
+
         viewPagerItemArrayList = new ArrayList<>();
 
 
         // Randomising images array
         Random rand = new Random();
+        long seed = rand.nextLong();
 
-        for (int i = 0; i < images.length; i++) {
-            int randomIndexToSwap = rand.nextInt(images.length);
-            int temp = images[randomIndexToSwap];
-            images[randomIndexToSwap] = images[i];
-            images[i] = temp;
-        }
+        rand.setSeed(seed);
+        Collections.shuffle(image_id, rand);
+        rand.setSeed(seed);
+        Collections.shuffle(image_likes, rand);
+        rand.setSeed(seed);
+        Collections.shuffle(image_dislikes, rand);
+        rand.setSeed(seed);
+        Collections.shuffle(image_date, rand);
+        rand.setSeed(seed);
+        Collections.shuffle(image_blob, rand);
+
+//        for (int i = 0; i < images.length; i++) {
+//            int randomIndexToSwap = rand.nextInt(images.length);
+//            int temp = images[randomIndexToSwap];
+//            images[randomIndexToSwap] = images[i];
+//            images[i] = temp;
+//        }
+
+
 
         // Sending all data to the ViewPager which is "carousel"
-        for(int i = 0; i<images.length; i++){
+        for (int i = 0; i < image_blob.size(); i++) {
+            Bitmap bm = BitmapFactory.decodeByteArray(image_blob.get(i), 0, image_blob.get(i).length);
             //ViewPagerItem viewPagerItem = new ViewPagerItem(images[i], likes[i], dislikes[i]);
-            ViewPagerItem viewPagerItem = new ViewPagerItem(images[i], Integer.parseInt(image_likes.get(i)) , Integer.parseInt(image_dislikes.get(i)));
+            ViewPagerItem viewPagerItem = new ViewPagerItem(bm, Integer.parseInt(image_likes.get(i)), Integer.parseInt(image_dislikes.get(i)));
             viewPagerItemArrayList.add(viewPagerItem);
         }
 
@@ -106,77 +128,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void gettingDataToArrays(){
+    public void gettingDataToArrays() {
 
-                        showMessage("yoyoyo", "message is pretty important");
-                        Cursor cursor = databaseHelper.getAllData();
+        showMessage("yoyoyo", "message is pretty important");
+        Cursor cursor = databaseHelper.getAllData();
 
-                        // Trying to increase a CursorWindow size
-                        try {
-                            Field field = CursorWindow.class.getDeclaredField("sCursorWindowSize");
-                            field.setAccessible(true);
-                            field.set(null, 100 * 1024 * 1024); //the 100MB is the new size
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+        // Trying to increase a CursorWindow size
+        try {
+            Field field = CursorWindow.class.getDeclaredField("sCursorWindowSize");
+            field.setAccessible(true);
+            field.set(null, 100 * 1024 * 1024); //the 100MB is the new size
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-                        if(cursor.getCount()==0){
-                            showMessage("Error", "Error while reading data. No data.");
-                            return;
-                        }
+        if (cursor.getCount() == 0) {
+            showMessage("Error", "Error while reading data. No data.");
+            return;
+        }
 
-                        while(cursor.moveToNext()){
-                            image_id.add(cursor.getString(0));
-                            image_likes.add(cursor.getString(1));
-                            image_dislikes.add(cursor.getString(2));
-                            image_date.add(cursor.getString(3));
+        while (cursor.moveToNext()) {
+            image_id.add(cursor.getString(0));
+            image_likes.add(cursor.getString(1));
+            image_dislikes.add(cursor.getString(2));
+            image_date.add(cursor.getString(3));
 
-                            image_blob.add(cursor.getBlob(4));
-                        }
+            image_blob.add(cursor.getBlob(4));
+        }
 
-                        showMessage("Success", "Success. Data is in arrays");
+        showMessage("Success", "Success. Data is in arrays");
 
-                        System.out.println("\nIDS:\n\n");
-                        for(String i : image_id){
-                            System.out.println(i);
-                        }
-                        System.out.println("\nIDS:\n\n");
-
-                    }
-
-
-
-
-
-    public void viewAll(){
-        btnShow.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v){
-                        Cursor res = databaseHelper.getAllData();
-                        if(res.getCount()==0){
-                            showMessage("Error", "Error while reading data. No data.");
-                            return;
-                        }
-
-                        StringBuffer buffer = new StringBuffer();
-                        while(res.moveToNext()){
-                            buffer.append("Id : " + res.getString(0)+"\n");
-
-                            buffer.append("Likes : " + res.getString(1)+"\n");
-                            buffer.append("Dislikes : " + res.getString(2)+"\n");
-                            buffer.append("Date_loaded : " + res.getString(3)+"\n");
-                        }
-                        //showMessage("Data", buffer.toString());
-                        showMessage("yo yo", "Message is pretty important");
-                    }
-                }
-
-        );
+        System.out.println("\nIDS:\n\n");
+        for (String i : image_id) {
+            System.out.println(i);
+        }
+        System.out.println("\nIDS:\n\n");
 
     }
 
-    public void showMessage(String title, String Message){
+    public void showMessage(String title, String Message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
         builder.setTitle(title);
@@ -184,9 +174,9 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    public void onLike(View v){
+    public void onLike(View v) {
         VPAdapter vpadapter = new VPAdapter();
 
-        System.out.println("\n\n  actual position is:  "+ vpadapter.pos + " \n\n");
+        System.out.println("\n\n  actual position is:  " + vpadapter.pos + " \n\n");
     }
 }
