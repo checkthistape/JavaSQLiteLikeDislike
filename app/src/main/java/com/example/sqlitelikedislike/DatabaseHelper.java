@@ -15,7 +15,8 @@ import java.io.File;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 
-    private static final String DB_PATH="/data/user/0/com.example.sqlitelikedislike/files/db/";
+    //private static final String DB_PATH="/data/user/0/com.example.sqlitelikedislike/files/db/";
+    private static final String DB_PATH="/data/data/com.example.sqlitelikedislike/databases/";
     private static final String DB_NAME="sqlitelikedislike.db";
     private static final int DB_VERSION=1;
     private static final String TB_USER="images";

@@ -3,10 +3,12 @@ package com.example.sqlitelikedislike;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.database.CursorWindow;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,11 +29,14 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    Button btnShow;
-    DatabaseHelper databaseHelper = new DatabaseHelper(this);
+    int currentViewPagerPos = 0;
+    DatabaseHelper databaseHelper;
     ArrayList<String> image_id, image_likes, image_dislikes, image_date;
     ArrayList<byte[]> image_blob;
     ArrayList<ViewPagerItem> viewPagerItemArrayList;
+
+    VPAdapter vpAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +44,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnShow = findViewById(R.id.buttonMain);
 
         /*.~~~~~~~~~~~~~.SQLite.~~~~~~~~~~~~~.*/
         // SQLite check
-
-        //databaseHelper.checkDataBase();
+        databaseHelper = new DatabaseHelper(this);
 
         // Defining arrays, that will contain data from db
         image_id = new ArrayList<>();
@@ -56,27 +59,8 @@ public class MainActivity extends AppCompatActivity {
         gettingDataToArrays();
         /*.~~~~~~~~~~~~~.SQLite.~~~~~~~~~~~~~.*/
 
-        /*.~~~~~~~~~~~~~.File checking.~~~~~~~~~~~~~.*/
-        //File[] files = new File("/data/user/0/com.example.sqlitelikedislike/files/db/").listFiles();
-
-//        System.out.println("--------------\n\n");
-//        for (File i : files) {
-//            System.out.println("Element " + i.toString());
-//            Toast.makeText(this, "Element " + i, Toast.LENGTH_SHORT).show();
-//        }
-//        System.out.println("\n--------------");
-        /*.~~~~~~~~~~~~~.File checking.~~~~~~~~~~~~~.*/
-
         // ViewPager initialisation part
-
-
-
-        int[] images = {R.drawable.arasaka, R.drawable.rand, R.drawable.rand2, R.drawable.rand3, R.drawable.arasaka};
-        int[] likes = {25, 32, 33, 55, 3};
-        int[] dislikes = {3, 194, 2, 8, 4};
-
         viewPagerItemArrayList = new ArrayList<>();
-
 
         // Randomising images array
         Random rand = new Random();
@@ -93,15 +77,6 @@ public class MainActivity extends AppCompatActivity {
         rand.setSeed(seed);
         Collections.shuffle(image_blob, rand);
 
-//        for (int i = 0; i < images.length; i++) {
-//            int randomIndexToSwap = rand.nextInt(images.length);
-//            int temp = images[randomIndexToSwap];
-//            images[randomIndexToSwap] = images[i];
-//            images[i] = temp;
-//        }
-
-
-
         // Sending all data to the ViewPager which is "carousel"
         for (int i = 0; i < image_blob.size(); i++) {
             Bitmap bm = BitmapFactory.decodeByteArray(image_blob.get(i), 0, image_blob.get(i).length);
@@ -111,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Creating slider object and send to it all of the data
-        VPAdapter vpAdapter = new VPAdapter(viewPagerItemArrayList);
+        vpAdapter = new VPAdapter(viewPagerItemArrayList);
 
         // Finding viewPager2 object in xml file
         vpAdapter.viewPager2 = findViewById(R.id.viewpager);
@@ -125,12 +100,25 @@ public class MainActivity extends AppCompatActivity {
         vpAdapter.viewPager2.getChildAt(0).setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
 
 
-    }
+        vpAdapter.viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                currentViewPagerPos = position;
+                // The 'position' parameter is the current position of the ViewPager2
+                // You can use it as needed
 
+                //Log.d("ViewPagerPosition", "Current position: " + position);
+
+            }
+        });
+
+
+    }
 
     public void gettingDataToArrays() {
 
-        showMessage("yoyoyo", "message is pretty important");
+
         Cursor cursor = databaseHelper.getAllData();
 
         // Trying to increase a CursorWindow size
@@ -156,18 +144,10 @@ public class MainActivity extends AppCompatActivity {
             image_blob.add(cursor.getBlob(4));
         }
 
-        showMessage("Success", "Success. Data is in arrays");
-
-        System.out.println("\nIDS:\n\n");
-        for (String i : image_id) {
-            System.out.println(i);
-        }
-        System.out.println("\nIDS:\n\n");
-
     }
 
     public void showMessage(String title, String Message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setCancelable(true);
         builder.setTitle(title);
         builder.setMessage(Message);
@@ -175,8 +155,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onLike(View v) {
-        VPAdapter vpadapter = new VPAdapter();
+        Button current = v.findViewById(R.id.buttonLike);
 
-        System.out.println("\n\n  actual position is:  " + vpadapter.pos + " \n\n");
+        String currentText = (String)current.getText();
+
+        String numberPart = currentText.replaceAll("[^0-9]", "");
+
+        try {
+            int number = Integer.parseInt(numberPart);
+            showMessage("Position:", "\n  actual position is:  " + currentViewPagerPos + " \n" + "Like " + (number+1));
+            current.setBackgroundColor(Color.argb(255,30,40,20));
+        }
+        catch(NumberFormatException e){
+            showMessage("Error!", "No valid number found at the end of the string.");
+        }
+
+    }
+
+    public void onDislike(View v){
+        Button current = v.findViewById(R.id.buttonDis);
+        current.setBackgroundColor(Color.argb(255,80, 81,  79));
+
     }
 }

@@ -47,9 +47,6 @@ public class VPAdapter extends RecyclerView.Adapter<VPAdapter.ViewHolder> {
 
         ViewPagerItem viewPagerItem = viewPagerItemArrayList.get(position);
 
-        System.out.println("Position is: " + position);
-        System.out.println(viewPagerItem);
-
         //holder.imageView.setImageResource(viewPagerItem.imageId);
         //holder.imageView.setImageResource(viewPagerItem.image);
         holder.imageView.setImageBitmap(viewPagerItem.image);
